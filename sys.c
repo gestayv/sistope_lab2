@@ -2185,25 +2185,51 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 */
 asmlinkage int sys_procinfo(int status)
 {
-	// Se verifica que status sea válido
+	//	Se crea un listado con todos los estados posibles y un contador para
+	//	recorrerlo.
+	int estados = {0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+	int  i = 0;
 
-	struct task_struct *lista;
-	struct task_struct *hijo;
-	struct list_head *index;
-
-	for_each_process(lista)
-	{
-		if(lista->state == status)
+	//	Si el estado ingresado se encuentra en el arreglo, se sale del loop.
+	//	De lo contrario, se sigue iterando hasta la condición de borde.
+	while(i < 14) {
+		if(status == estados[i])
 		{
-			printk(KERN_INFO "Proceso %s	pid:%d	uid:%d \n", lista->comm, lista->pid, lista->uid);
-			list_for_each(index, lista->children)
-			{
-				hijo = list_entry(index ,struct task_struct, sibling);
-				printk(KERN_INFO "Hijo %s", hijo->comm);
-			}
+			break;
 		}
+		i++;
 	}
 
+	//	Si el contador es menor a 14, o sea, si encontró el estado que se le
+	//	entrega a la syscall en el arreglo
+	if(i < 14)
+	{
+		//	Se crean punteros a task_struct y list_head, los que se utilizan
+		//	para recorrer el listado de procesos o tareas, y sus hijos.
+		struct task_struct *lista;
+		struct task_struct *hijo;
+		struct list_head *index;
 
-	return 0;
+		//	Se emplea la macro para recorrer todos los procesos.
+		for_each_process(lista)
+		{
+			//	Si el proceso está en el estado que se le entrega a la syscall:
+			if(lista->state == status)
+			{
+				//	Se muestra su información
+				printk(KERN_INFO "Proceso %s	pid:%d	uid:%d \n", lista->comm, lista->pid, lista->uid);
+				//	Se itera sobre cada uno de sus procesos hijos
+				list_for_each(index, lista->children)
+				{
+					hijo = list_entry(index ,struct task_struct, sibling);
+					//	Y se muestra el nombre de cada uno.
+					printk(KERN_INFO "Hijo %s", hijo->comm);
+				}
+			}
+		}
+		return 1;
+	}
+	//	Si el estado entregado a la syscall no está en el arreglo, la syscall
+	//	retorna -1.
+	return -1;
 }
