@@ -2222,6 +2222,7 @@ asmlinkage int sys_procinfo(int status)
 				kuid_t uid_proceso = lista->cred->uid;
 				//	Se muestra su información
 				printk(KERN_INFO "Proceso %s pid:%d uid:%d \n", lista->comm, lista->pid, uid_proceso.val);
+				printk(KERN_INFO "Estado: %d \n", (int)lista->status);
 				//	Se itera sobre cada uno de sus procesos hijos
 				list_for_each(index, &lista->children)
 				{
