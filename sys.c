@@ -2217,11 +2217,11 @@ asmlinkage int sys_procinfo(int status)
 			if(lista->state == status)
 			{
 				//	Se muestra su información
-				printk(KERN_INFO "Proceso %s	pid:%d	uid:%d \n", lista->comm, lista->pid, lista->uid);
+				printk(KERN_INFO "Proceso %s pid:%d uid:%d \n", lista->comm, lista->pid, lista->cred->uid);
 				//	Se itera sobre cada uno de sus procesos hijos
-				list_for_each(index, lista->children)
+				list_for_each(index, &lista->children)
 				{
-					hijo = list_entry(index ,struct task_struct, sibling);
+					hijo = list_entry(index, struct task_struct, sibling);
 					//	Y se muestra el nombre de cada uno.
 					printk(KERN_INFO "Hijo %s", hijo->comm);
 				}

@@ -42,13 +42,13 @@ int main(int argc, char const *argv[])
         }
     }
 
-    if(sflag == 0)
+    if(sflag == 0)  
     {
         fprintf(stderr, "No se ingreso el parametro '-s'\n");
         return -1;
     }
 
-    
+
 
     return 0;
 }
