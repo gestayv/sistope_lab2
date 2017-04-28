@@ -2187,7 +2187,7 @@ asmlinkage int sys_procinfo(int status)
 {
 	//	Se crea un listado con todos los estados posibles y un contador para
 	//	recorrerlo.
-	int estados = {0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
+	int estados[] = {0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
 	int  i = 0;
 
 	//	Si el estado ingresado se encuentra en el arreglo, se sale del loop.
@@ -2216,8 +2216,9 @@ asmlinkage int sys_procinfo(int status)
 			//	Si el proceso está en el estado que se le entrega a la syscall:
 			if(lista->state == status)
 			{
+				kuid_t uid_proceso = lista->cred->uid;
 				//	Se muestra su información
-				printk(KERN_INFO "Proceso %s pid:%d uid:%d \n", lista->comm, lista->pid, lista->cred->uid);
+				printk(KERN_INFO "Proceso %s pid:%d uid:%d \n", lista->comm, lista->pid, uid_proceso.val);
 				//	Se itera sobre cada uno de sus procesos hijos
 				list_for_each(index, &lista->children)
 				{
