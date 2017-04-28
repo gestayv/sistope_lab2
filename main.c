@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
     int c;
     opterr = 0;
 
-    while((c = getopt(argc, argv, "s"))!= -1)
+    while((c = getopt(argc, argv, "s:"))!= -1)
     {
         switch (c) {
             case 's':
@@ -42,13 +42,13 @@ int main(int argc, char const *argv[])
         }
     }
 
-    if(sflag == 0)  
+    if(sflag == 0)
     {
         fprintf(stderr, "No se ingreso el parametro '-s'\n");
         return -1;
     }
 
-
+    int salida = syscall(SYS_procinfo_64, svalue);
 
     return 0;
 }
