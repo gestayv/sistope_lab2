@@ -2185,24 +2185,27 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 */
 asmlinkage int sys_procinfo(int status)
 {
-	//	Se crea un listado con todos los estados posibles y un contador para
-	//	recorrerlo.
+	//	Se crea un listado con todos los estados posibles, un contador para
+	//	recorrerlo y una variable para identificar cuando se encuentra el estado
+	//	ingresado.
 	int estados[] = {0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096};
-	int  i = 0;
+	int  i = 0, found = 0;
 
-	//	Si el estado ingresado se encuentra en el arreglo, se sale del loop.
+	//	Si el estado ingresado se encuentra en el arreglo, se modifica "found"
+	//	y se sale del loop.
 	//	De lo contrario, se sigue iterando hasta la condición de borde.
-	while(i < 14) {
+	for (i = 0; i <= 13; i++)
+	{
 		if(status == estados[i])
 		{
+			found = 1;
 			break;
 		}
-		i++;
 	}
 
-	//	Si el contador es menor a 14, o sea, si encontró el estado que se le
+	//	Si "found" es igual a 1, o sea, si se encontró el estado que se le
 	//	entrega a la syscall en el arreglo
-	if(i < 14)
+	if(found == 1)
 	{
 		//	Se crean punteros a task_struct y list_head, los que se utilizan
 		//	para recorrer el listado de procesos o tareas, y sus hijos.
