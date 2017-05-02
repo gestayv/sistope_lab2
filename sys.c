@@ -2231,8 +2231,8 @@ asmlinkage int sys_procinfo(int status)
 				}
 			}
 		}
-		//	Si la syscall funciona correctamente, se devuelve 1.
-		return 1;
+		//	Si la syscall funciona correctamente, se devuelve el parámetro de entrada.
+		return status;
 	}
 	//	Si el estado entregado a la syscall no está en el arreglo, la syscall
 	//	retorna -1.

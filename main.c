@@ -48,7 +48,26 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    int salida = syscall(SYS_procinfo_64, svalue);
+    int arch = 0, salida = 0;
+    printf("Seleccione la arquitectura de su cpu:\n");
+
+    while(arch != 1 && arch != 2)
+    {
+        printf("1. 32 bits\n");
+        printf("2. 64 bits\n");
+        scanf("%d", &arch);
+        printf("\n");
+    }
+
+    if(arch == 1)
+    {
+        salida = syscall(SYS_procinfo_64, svalue);
+    }
+    else if(arch == 2)
+    {
+        salida = syscall(SYS_procinfo_32, svalue);
+    }
+
 
     return 0;
 }
