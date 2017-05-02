@@ -2213,20 +2213,24 @@ asmlinkage int sys_procinfo(int status)
 		struct task_struct *hijo;
 		struct list_head *index;
 
-		//	Se emplea la macro para recorrer todos los procesos.
+		//	Se emplea la macro "for_each_process" para recorrer todos los procesos
+		//	a partir de un puntero a task_struct.
 		for_each_process(lista)
 		{
 			//	Si el proceso está en el estado que se le entrega a la syscall:
 			if(lista->state == status)
 			{
+				//	Se obtiene la estructura que contiene el uid del proceso.
 				kuid_t uid_proceso = lista->cred->uid;
-				//	Se muestra su información
+				//	Se la información del proceso.
 				printk(KERN_INFO "Proceso %s pid:%d uid:%d \n", lista->comm, lista->pid, uid_proceso.val);
-				//	Se itera sobre cada uno de sus procesos hijos
+				//	Se itera sobre cada uno de sus procesos hijos utilizando la macro "list_for_each",
+				//	la que se utiliza para iterar sobre todos los elementos de la lista circular.
 				list_for_each(index, &lista->children)
 				{
+					//	Se obtiene el nodo de la lista que le corresponde al hijo.
 					hijo = list_entry(index, struct task_struct, sibling);
-					//	Y se muestra el nombre de cada uno.
+					//	Y se muestra su nombre.
 					printk(KERN_INFO "Hijo %s", hijo->comm);
 				}
 			}
