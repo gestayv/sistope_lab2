@@ -61,11 +61,11 @@ int main(int argc, char const *argv[])
 
     if(arch == 1)
     {
-        salida = syscall(SYS_procinfo_64, svalue);
+        salida = syscall(SYS_procinfo_32, svalue);
     }
     else if(arch == 2)
     {
-        salida = syscall(SYS_procinfo_32, svalue);
+        salida = syscall(SYS_procinfo_64, svalue);
     }
 
 
