@@ -2218,7 +2218,7 @@ asmlinkage int sys_procinfo(int status)
 		for_each_process(lista)
 		{
 			//	Si el proceso está en el estado que se le entrega a la syscall:
-			if(lista->state == status)
+			if(lista->state == status || lista->exit_state == status)
 			{
 				//	Se obtiene la estructura que contiene el uid del proceso.
 				kuid_t uid_proceso = lista->cred->uid;
